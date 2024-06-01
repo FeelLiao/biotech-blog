@@ -11,15 +11,15 @@ author: Feel Liao
 language: zh-CN
 timezone: Asia/Shanghai
 
-# abbrlink config
+# hexo-abbrlink
 abbrlink:
-  alg: crc32      #support crc16(default) and crc32
-  rep: hex        #support dec(default) and hex
+  alg: crc32      #支持crc16和crc32算法（默认crc16）
+  rep: hex        #支持dec和hex值（默认dec）
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://blog.stariverfeel.eu.org/
-permalink: :posts/:abbrlink.html
+permalink: posts/:abbrlink.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks

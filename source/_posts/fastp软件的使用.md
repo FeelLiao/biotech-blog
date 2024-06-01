@@ -1,12 +1,13 @@
 ---
 title: fastp软件的使用
-date: 2024-05-29 22:35:08
 categories:
-- 转录组分析
+  - 转录组分析
 tags:
-- 生物信息
-- 转录组分析
-- 生信软件使用
+  - 生物信息
+  - 转录组分析
+  - 生信软件使用
+abbrlink: f2223f63
+date: 2024-05-29 22:35:08
 ---
 
 > fastp: A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.

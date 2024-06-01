@@ -1,13 +1,14 @@
 ---
 title: 差异分析三巨头 DESeq2、edgeR、limma
-date: 2024-06-01 17:25:03
 categories:
-- 转录组分析
+  - 转录组分析
 tags:
-- 生物信息
-- 转录组分析
-- 生信软件使用
-- R语言
+  - 生物信息
+  - 转录组分析
+  - 生信软件使用
+  - R语言
+abbrlink: 94b5d431
+date: 2024-06-01 17:25:03
 ---
 
 ## 差异分析三巨头 DESeq2、edgeR、limma
