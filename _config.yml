@@ -3,18 +3,23 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Feel Liao's Blog
+title: Feel's Blog
 subtitle: ''
-description: 'A blog record my life in biology exploration'
-keywords: "生信"
+description: '记录生活，分享感动'
+keywords: "生信, 计算机, 网络, 代码, 博客"
 author: Feel Liao
 language: zh-CN
 timezone: Asia/Shanghai
 
+# abbrlink config
+abbrlink:
+  alg: crc32      #support crc16(default) and crc32
+  rep: hex        #support dec(default) and hex
+
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://blog.stariverfeel.eu.org/
-permalink: :year/:month/:day/:title/
+permalink: :posts/:abbrlink.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -69,6 +74,14 @@ default_category: uncategorized
 category_map:
 tag_map:
 
+
+math:
+  engine: 'mathjax'
+  mathjax:
+    src: custom_mathjax_source
+    config:
+      # MathJax config   
+
 # Metadata elements
 ## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
 meta_generator: true
@@ -102,3 +115,14 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+search:
+  path: search.xml
+  field: post
+  content: true
+
+# 站点地图
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml

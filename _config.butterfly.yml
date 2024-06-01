@@ -9,15 +9,16 @@ nav:
 
 # Menu 目錄
 menu:
-  Home: / || fas fa-home
-  Archives: /archives/ || fas fa-archive
-  Tags: /tags/ || fas fa-tags
-  Categories: /categories/ || fas fa-folder-open
+  首页: / || fas fa-home
+  文章||fas fa-list:
+    归档: /archives/ || fas fa-archive
+    标签: /tags/ || fas fa-tags
+    分类: /categories/ || fas fa-folder-open
   # List||fas fa-list:
   #   Music: /music/ || fas fa-music
   #   Movie: /movies/ || fas fa-video
-  Link: /link/ || fas fa-link
-  About: /about/ || fas fa-heart
+  友链: /link/ || fas fa-link
+  关于: /about/ || fas fa-heart
 
 # Code Blocks (代碼相關)
 # --------------------------------------
@@ -54,7 +55,7 @@ disable_top_img: false
 index_img: /website_assets/index.jpg
 
 # If the banner of page not setting, it will show the top_img
-default_top_img:
+default_top_img: /website_assets/index.jpg
 
 # The banner image of archive page
 archive_img:
@@ -126,9 +127,9 @@ index_post_content:
 # anchor
 anchor:
   # when you scroll, the URL will update according to header id.
-  auto_update: false
+  auto_update: true
   # Click the headline to scroll and update the anchor
-  click_to_scroll: false
+  click_to_scroll: true
 
 # figcaption (圖片描述文字)
 photofigcaption: false
@@ -219,7 +220,7 @@ aside:
   hide: false
   button: true
   mobile: true # display on mobile
-  position: right # left or right
+  position: left # left or right
   display:
     archive: true
     tag: true
@@ -230,8 +231,8 @@ aside:
     button:
       enable: true
       icon: fab fa-github
-      text: Follow Me
-      link: https://github.com/xxxxxx
+      text: Follow Feel
+      link: https://github.com/FeelLiao
   card_announcement:
     enable: true
     content: This is my Blog
@@ -354,6 +355,7 @@ katex:
   per_page: false
   hide_scrollbar: true
 
+
 # search (搜索)
 # see https://butterfly.js.org/posts/ceeb73f/#搜索系統
 # --------------------------------------
@@ -366,11 +368,11 @@ algolia_search:
 
 # Local search
 local_search:
-  enable: false
+  enable: true
   # Preload the search data when the page loads.
-  preload: false
+  preload: true
   # Show top n results per article, show all results by setting to -1
-  top_n_per_article: 1
+  top_n_per_article: 3
   # Unescape html strings to the readable one.
   unescape: false
   CDN:
@@ -841,7 +843,7 @@ note:
 # It may contain bugs and unstable, give feedback when you find the bugs.
 # https://github.com/MoOx/pjax
 pjax:
-  enable: false
+  enable: true
   exclude:
     # - xxxx
     # - xxxx
