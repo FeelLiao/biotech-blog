@@ -596,8 +596,8 @@ google_adsense:
 # --------------------------------------
 
 site_verification:
-  # - name: google-site-verification
-  #   content: xxxxxx
+  - name: msvalidate.01
+    content: 95E2B2E646EF9201A12D7F885F4C3BA7
   # - name: baidu-site-verification
   #   content: xxxxxxx
 
