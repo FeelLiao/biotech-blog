@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>差异分析三巨头 DESeq2、edgeR、limma</title>
+    <link href="/posts/94b5d431.html"/>
+    <url>/posts/94b5d431.html</url>
+    
+    <content type="html"><![CDATA[<h2 id="差异分析三巨头-deseq2-edger-limma"><a class="markdownIt-Anchor" href="#差异分析三巨头-deseq2-edger-limma"></a> 差异分析三巨头 DESeq2、edgeR、limma</h2><p>DESeq2、edgeR、limma是转录组差异分析的金标准，大多数转录组的文章和公司都是使用这三个R包做转录组的差异基因分析。</p><p>做差异基因表达分析需要的数据有：<strong>表达矩阵、分组信息</strong></p><ol><li><strong>表达矩阵</strong>：即上游分析得到的每个基因在每个样本中的reads数，这里所使用的差异分析包都要求原始reads数的格式输入。</li><li><strong>分组信息</strong>：即一个实验设计矩阵，包含每一个测序样本属于哪一个实验组或者对照组。</li></ol><blockquote><p>如果想要实现<strong>每个组之间的差异比较</strong>（相当于比较两个组之间哪些基因的表达存在差异，并求得这种差异的统计显著性），则还需要设置比较矩阵，具体设计方法可以参考每个包的说明文档。一般来说如果不设置的话，默认输出中不包含每个组的多重比较结果。</p></blockquote><h2 id="包简介"><a class="markdownIt-Anchor" href="#包简介"></a> 包简介</h2><p>对于有生物学重复的样品，使用DESeq2进行样品组间的差异表达分析，获得两个生物学条件之间的差异表达基因集；对于无生物学重复我们使用edgeR。这里只是一般的使用状态，没有绝对性，比如，edgeR在有生物学重复的情况下也能使用，只是在识别差异基因的能力和出现假阳性结果等方面两个包存在不同而已。上文提到的三个R包做差异分析都要求输入基因的未经过标准化的 reads 计数数据，而不能是 RPKM、FPKM 等经过标准化的数据。</p><p>差异分析之后，还需要用 Benjamini-Hochberg 方法对假设检验概率（P value）进行多重假设检验校正，得到错误发现率（False Discovery Rate，FDR）。差异基因的筛选条件为 |log2Fold Change| &gt;= 1（建议值，可根据实际情况进行调整），且 FDR &lt; 0.05</p><h3 id="deseq2"><a class="markdownIt-Anchor" href="#deseq2"></a> DESeq2</h3><p>DESeq2 基于负二项分布模型，考虑了基因表达数据的离散性和变异性，以及库大小差异对差异分析的影响。DESeq2 通过正态化转换和归一化来减少样本间的技术变异，然后估计基因表达的离散性。它使用负二项分布模型来鉴定差异表达基因，并校正多重检验问题。DESeq2 适用于小样本 RNA 测序数据，特别是在样本数较少的情况下表现较好，能够有效地处理样本间的差异、技术性噪音和批次效应。</p><h3 id="edger"><a class="markdownIt-Anchor" href="#edger"></a> edgeR</h3><p>edgeR 与 DESeq2类似，edgeR 也考虑了数据的离散性。它使用负二项分布模型和不同的归一化方法，如 TMM（Trimmed Mean of M values），来处理样本之间的技术变异。edgeR 使用一个假设检验框架来鉴定差异表达基因，并采用了类似于 Benjamini-Hochberg 方法的多重检验校正。edgeR 在样本较多的情况下表现较好，适用于中等规模的 RNA 测序数据，具有较高的灵敏度和精确度。使用 edgeR 时注意选择合适的分析算法，<strong>官方建议 bulk RNA-seq 选择 quasi-likelihood(QL) F-test tests，scRNA-seq 或是没有重复样品的数据选用 likelihood ratio test</strong>。</p><h3 id="limma"><a class="markdownIt-Anchor" href="#limma"></a> limma</h3><p><strong>DESeq2和edgeR都由limma二次开发而来</strong></p><p>limma 最初是针对基因芯片数据开发的，但后来也被应用于 RNA 测序数据。limma 基于线性模型，使用加权最小二乘法来估计基因表达的差异，并通过贝叶斯方法来校正多重检验问题。limma 在处理大规模数据时表现出色，适用于高通量数据分析，如芯片和大规模RNA测序数据，能够很好地控制假阳性率。</p><p>limma 适用于各种类型的高通量数据，包括芯片数据和 RNA-seq。它要求每个基因的表达值，可以是原始计数也可以是已经归一化的表达值。limma 进行差异分析有两种方法 ：limma-trend 和 voom。在样本测序深度相差不大时两种方法差距不大，而测序深度相差大时 voom 更有优势，因此我们一般都选择 voom 的方法进行差异分析</p><h3 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h3><ol><li>limma 包做差异分析要求数据满足正态分布或近似正态分布，如基因芯片、TPM 格式的高通量测序数据。</li><li>通常认为 Counts 数据不符合正态分布而服从泊松分布。所以对于 Counts 数据来说，用 limma 包进行差异分析，误差较大。</li><li>edgeR 差异分析速度快，得到的基因数目比较多，假阳性高（实际不差异，结果差异）；DESeq2 差异分析速度慢，得到的基因数目比较少，假阴性高（实际差异，结果不差异）。</li><li>DESeq2 更关注在小样本条件下的差异分析，提供了一些特有的统计模型和方法。edgeR 强调对技术性噪音和样本之间的变异性进行建模，特别适用于样本数量较大的数据集。limma 则是一种通用的差异分析方法，适用于各种高通量表达数据，不仅适用于 RNA-seq 数据，也适用于其他类型的表达数据，如芯片数据。</li></ol><h2 id="设计对比矩阵"><a class="markdownIt-Anchor" href="#设计对比矩阵"></a> 设计对比矩阵</h2><p><strong>DESeq2</strong></p><p>在使用<code>DESeq()</code>函数计算差异基因过后，可以使用<code>resultsNames()</code>函数查看默认对比组别，这里默认使用第一个组来做对照组，组别之间的差异基因都是跟对照组来比的。如果需要自定义各个组别之间的对比，或者组别为时间序列等其他特殊情况的话，则需要自己设计对比矩阵，可以参考<a href="https://github.com/tavareshugo/tutorial_DESeq2_contrasts">tavareshugo/tutorial_DESeq2_contrasts (github.com)</a>这篇文章。注意，<strong>DESeq2对直接的所有组别两两对比并不友好，如果要使用，建议用edgeR包。</strong></p><p><strong>edgeR</strong></p><p>在使用<code>glmQLFTest()</code>函数计算差异基因时，可以指定<code>contrast</code>参数，该参数接受一个<code>makeContrasts()</code>，该函数有两个参数<code>contrasts</code>和<code>levels</code>，<code>contrasts</code>描述了组别的对比关系，<code>levels</code>描述了不同的组别。</p><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment">#A, B, C 三组分别两两比较</span><br>makeContrasts<span class="hljs-punctuation">(</span>B<span class="hljs-operator">-</span>A<span class="hljs-punctuation">,</span>C<span class="hljs-operator">-</span>B<span class="hljs-punctuation">,</span>C<span class="hljs-operator">-</span>A<span class="hljs-punctuation">,</span>levels<span class="hljs-operator">=</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;C&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment">#A, B, C 三组满足更复杂的函数关系式</span><br>makeContrasts<span class="hljs-punctuation">(</span>contrasts<span class="hljs-operator">=</span><span class="hljs-string">&quot;A(B+C)/2&quot;</span><span class="hljs-punctuation">,</span>levels<span class="hljs-operator">=</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;C&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure><p>更详细的对比设计参考<a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html">A guide to creating design matrices for gene expression experiments (bioconductor.org)</a></p><h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2><ul><li><a href="https://zhuanlan.zhihu.com/p/653841949">看完还不会来揍我 | 差异分析三巨头 —— DESeq2、edgeR 和 limma 包 | 附完整代码 + 注释 - 知乎 (zhihu.com)</a></li><li><a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow_CHN.html">使用limma、Glimma和edgeR，RNA-seq数据分析易如反掌 (bioconductor.org)</a></li><li><a href="https://f1000research.com/articles/5-1438/v2">From reads to genes to pathways: differential… | F1000Research</a></li><li><a href="https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#contrasts">Analyzing RNA-seq data with DESeq2 (bioconductor.org)</a></li><li><a href="https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#differential-expression-analysis">RNA-seq workflow: gene-level exploratory analysis and differential expression (bioconductor.org)</a></li><li><a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02648-4">Exaggerated false positives by popular differential expression methods when analyzing human population samples | Genome Biology | Full Text (biomedcentral.com)</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>转录组分析</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>生物信息</tag>
+      
+      <tag>转录组分析</tag>
+      
+      <tag>生信软件使用</tag>
+      
+      <tag>R语言</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>fastp软件的使用</title>
+    <link href="/posts/f2223f63.html"/>
+    <url>/posts/f2223f63.html</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>fastp: A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.</p></blockquote><p><a href="https://github.com/OpenGene/fastp">fastp</a>，它可以仅仅扫描FASTQ文件一次，就完成比FASTQC + cutadapt + Trimmomatic 这三个软件加起来的功能还多很多的功能，而且速度上比仅仅使用Trimmomatic一个软件还要快3倍左右，因为它使用C++开发，处处使用了高效算法，而且完美支持多线程！</p><h2 id="fastp过滤测序序列"><a class="markdownIt-Anchor" href="#fastp过滤测序序列"></a> fastp过滤测序序列</h2><h3 id="过滤"><a class="markdownIt-Anchor" href="#过滤"></a> 过滤</h3><p>fastp可以对低质量序列，较多N的序列，该功能默认是启用的，但可以使用-Q参数关闭。使用-q参数来指定合格的phred质量值，比如-q 15表示质量值大于等于Q15的即为合格，然后使用-u参数来指定最多可以有多少百分比的质量不合格碱基。比如-q 15 -u 40表示一个read最多只能有40%的碱基的质量值低于Q15，否则会被扔掉。使用-n可以限定一个read中最多能有多少个N。</p><p>fastp还默认启用了read长度过滤，但可以使用-L参数关闭。使用-l参数指定最低要求一个read有多长，比如-l 30表示低于30个碱基的read会被扔掉。这个功能可以用于实现常用的discard模式，以保证所有输出的序列都一样长。</p><p>在fastp的HTML报告中，最头上的Summary表格很清楚地显示了过滤的统计信息，如下图所示：</p><p><img src="https://pic2.zhimg.com/80/v2-6920178b4b210ff1e37089ff8e1b289d_720w.webp" alt="" /></p><h3 id="接头处理"><a class="markdownIt-Anchor" href="#接头处理"></a> 接头处理</h3><p>接头（adapter）污染的处理是FASTQ文件预处理中很重要的一步。fastp默认启用了接头处理，但是可以使用-A命令来关掉。fastp可以自动化地查找接头序列并进行剪裁，也就是说你可以不输入任何的接头序列，fastp全自动搞定了！对于SE数据，你还是可以-a参数来输入你的接头，而对于PE数据则完全没有必要，fastp基于PE数据的overlap分析可以更准确地查找接头，去得更干净，而且对于一些接头本身就有碱基不匹配情况处理得更好。fastp对于接头去除会有一个汇总的报告，如下图所示：</p><p><img src="https://pic1.zhimg.com/80/v2-202f214ad93c99a305f6b3510ddf3f78_720w.webp" alt="" /></p><h3 id="滑窗质量剪裁"><a class="markdownIt-Anchor" href="#滑窗质量剪裁"></a> 滑窗质量剪裁</h3><p>很多时候，一个read的低质量序列都是集中在read的末端，也有少部分是在read的开头。fastp支持像Trimmomatic那样对滑动窗口中的碱基计算平均质量值，然后将不符合的滑窗直接剪裁掉。使用-5参数开启在5’端，也就是read的开头的剪裁，使用-3参数开启在3’端，也就是read的末尾的剪裁。使用-W参数指定滑动窗大小，默认是4，使用-M参数指定要求的平均质量值，默认是20，也就是Q20。</p><h3 id="pe数据的碱基校正"><a class="markdownIt-Anchor" href="#pe数据的碱基校正"></a> PE数据的碱基校正</h3><p>fastp支持对PE数据的每一对read进行分析，查找它们的overlap区间，然后对于overlap区间中不一致的碱基，如果发现其中一个质量非常高，而另一个非常低，则可以将非常低质量的碱基改为相应的非常高质量值的碱基值，如下图所示：</p><p><img src="https://pic4.zhimg.com/80/v2-78e31fe48bbdc53f5c1a1427b6170a53_720w.webp" alt="" /></p><p>上图中所示的标红的T碱基是低质量序列，和高质量的A不匹配，它会被校正为A。该校正功能默认没有开启使用-c参数可以启用，对于一些对噪声容忍度低的应用，比如液体活检，建议开启。</p><h3 id="全局剪裁"><a class="markdownIt-Anchor" href="#全局剪裁"></a> 全局剪裁</h3><p>fastp可以对所有read在头部和尾部进行统一剪裁，该功能在去除一些测序质量不好的cycle比较有用，比如151*2的PE测序中，最后一个cycle通常质量是非常低的，需要剪裁掉。使用-f和-t分别指定read1的头部和尾部的剪裁，使用-F和-T分别指定read2的头部和尾部的剪裁。</p><h3 id="polyg剪裁"><a class="markdownIt-Anchor" href="#polyg剪裁"></a> polyG剪裁</h3><p>对于两色发光法的Illumina设备（NextSeq / NovaSeq），因为在没有光信号情况下base calling的结果会返回G，所以在序列的尾端可能会出现较多的polyG，需要被去除。fastp会自动化地识别NextSeq / NovaSeq的数据，然后进行polyG识别和剪裁。如果你想强制开启该功能，可以指定-g参数，如果想强制关闭该功能，则可以指定-G参数。</p><h3 id="分子标签umi处理"><a class="markdownIt-Anchor" href="#分子标签umi处理"></a> 分子标签UMI处理</h3><p>UMI在处理ctDNA类似的超低频突变检测应用中是十分有用的，为了更好地对带UMI的FASTQ文件进行预处理，fastp也很好地支持了UMI预处理功能。该功能默认没有启用，需要使用-U参数开启，另外需要使用–umi_loc来指定UMI所在的位置，它可以是（index1、 index2、 read1、 read2、 per_index、 per_read ）中的一种，分别表示UMI是在index位置上，还是在插入片段中。如果指定了是在插入序列中，还需要使用 --umi_len 参数来指定UMI所占的碱基长度。</p><h3 id="输出文件切分"><a class="markdownIt-Anchor" href="#输出文件切分"></a> 输出文件切分</h3><p>很多时候我们需要对输出的FASTQ进行切分，分成大小均匀的多个文件，这样可以使用比对软件并行地比对，提高并行处理的速度。fastp软件也提供了相应的功能，并且支持了两种模式，分别是使用参数-s指定切分后文件的个数，或者使用-S参数指定每个切分后文件的行数。</p><h2 id="质控报告解读"><a class="markdownIt-Anchor" href="#质控报告解读"></a> 质控报告解读</h2><p>接下来，我们再看一下如何理解fastp生成的质控报告。fastp的报告在单一文件中同时包含了过滤前和过滤后的统计结果，如果是PE数据，则同时包含了read1和read2的统计结果。之前我们已经说过了，fastp会生成HTML的报告和JSON格式的报告。HTML报告的默认文件名是fastp.html，但是可以通过-h参数修改，JSON报告的默认文件名是fastp.json，但是可以通过-j参数修改。而且fastp报告还有一个标题，默认是fastp report，这个也可以通过-R参数修改为你想要的标题。JSON格式的报告是优化过的，人机皆可读，适合进阶的用户使用程序解析，而这里我们重点关注HTML格式的报告。</p><h3 id="质量分布曲线图"><a class="markdownIt-Anchor" href="#质量分布曲线图"></a> 质量分布曲线图</h3><p>我们第一关注的当然是质量，所以fastp提供了质量分布曲线，即每一个cycle的平均质量值，而且fastp同时提供了A/T/C/G四种不同碱基的平均质量，以及总的平均质量，如下图所示：</p><p><img src="https://pic3.zhimg.com/80/v2-ee5358c3a2a93af49171459278aa751e_720w.webp" alt="" /></p><p>从上图我们可以看到，一共有5条曲线，分别是A/T/C/G和mean。而且HTML报告中的每一个项目和分项目都是可以点击进行隐藏和展开的。</p><h3 id="碱基含量分布曲线"><a class="markdownIt-Anchor" href="#碱基含量分布曲线"></a> 碱基含量分布曲线</h3><p>和质量分布曲线类似，碱基含量分布曲线也是按照每一个cycle来的，显示了每一个位置的碱基含量。如下图所示：</p><p><img src="https://pic2.zhimg.com/80/v2-c2ca5f1b36bf7c9010d43773dffaf66d_720w.webp" alt="" /></p><p><img src="https://pic2.zhimg.com/80/v2-4d30aaf1dfe395d89d36d9ae5c3e135d_720w.webp" alt="" /></p><p>从图中可以看到，fastp同时显示了A/T/C/G/N/GC<br />的每一个位置的比例和总的比例。而且如果你觉得头部那里比较乱看不清的话，可以用鼠标拉一个框，它就放大了。</p><h3 id="kmer统计表格"><a class="markdownIt-Anchor" href="#kmer统计表格"></a> KMER统计表格</h3><p>fastp对5个碱基长度的所有组合的出现次数进行了统计，然后把它放在了一张表格中，表格的每一个元素为深背景白字，背景越深，则表示重复次数越多。这样，一眼望去，就可以发现有哪一些异常的信息。</p><p><img src="https://pic3.zhimg.com/80/v2-a69e014cd516d44ac2bb0d3cb8d6d67e_720w.webp" alt="" /></p><p>从上面的KMER表格中，我们可以发现，GGGGG的颜色特别深，从鼠标移上去之后显示的信息中我们可以发现它的出现次数是平均次数的12.8倍，这是不正常的，因为GGGGG的正常倍数应该在1倍左右。幸好我们有fastp，它可以过滤掉这种polyG，让数值较多地回归正常。</p><h3 id="过表达序列overrepresented-sequence"><a class="markdownIt-Anchor" href="#过表达序列overrepresented-sequence"></a> 过表达序列(overrepresented sequence)</h3><p>fastp的最新版本（v0.12）提供了overrepresetned<br />sequence的分析，而且不但提供了这些overrepresented sequence的序列个数和占比，还提供了他们在测序cycles中的分布情况，这有利于分析各种问题。具体示例如下图所示：</p><h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2><ul><li><a href="https://zhuanlan.zhihu.com/p/33601691">fastp: 一款超快速全功能的FASTQ文件自动化质控+过滤+校正+预处理软件</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>转录组分析</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>生物信息</tag>
+      
+      <tag>转录组分析</tag>
+      
+      <tag>生信软件使用</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
