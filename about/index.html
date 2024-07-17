@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/webicon.png">
+  <link rel="icon" href="/assets/webicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -16,15 +16,15 @@
   <meta name="author" content="Feel Liao">
   <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
   
-    <meta name="description" content="记录生活，分享感动">
+    <meta name="description" content="该博客的灵感和搭建过程参考了Juse’s blog：https:&#x2F;&#x2F;biojuse.com&#x2F;  关于本站的一些警告  根据文章内容进行操作前，请做好备份，以免造成不可逆的损失。 根据文章内容进行命令执行前，请注意电脑或服务器硬件配置是否满足需求 本站所有内容仅代表个人观点，如果有任何问题，可以联系博主，请友好交流。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="关于一些有的没的">
 <meta property="og:url" content="https://blog.stariverfeel.eu.org/about/index.html">
 <meta property="og:site_name" content="Feel&#39;s Blog">
-<meta property="og:description" content="记录生活，分享感动">
+<meta property="og:description" content="该博客的灵感和搭建过程参考了Juse’s blog：https:&#x2F;&#x2F;biojuse.com&#x2F;  关于本站的一些警告  根据文章内容进行操作前，请做好备份，以免造成不可逆的损失。 根据文章内容进行命令执行前，请注意电脑或服务器硬件配置是否满足需求 本站所有内容仅代表个人观点，如果有任何问题，可以联系博主，请友好交流。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-07-10T14:24:31.542Z">
-<meta property="article:modified_time" content="2024-07-10T14:24:31.542Z">
+<meta property="article:published_time" content="2024-07-17T02:14:44.455Z">
+<meta property="article:modified_time" content="2024-07-17T02:14:44.455Z">
 <meta property="article:author" content="Feel Liao">
 <meta property="article:tag" content="生信, 计算机, 网络, 代码, 博客">
 <meta name="twitter:card" content="summary_large_image">
@@ -38,6 +38,14 @@
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
 
@@ -69,7 +77,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"blog.stariverfeel.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"bash"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"blog.stariverfeel.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"bash"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -277,11 +285,50 @@
                 
 
 <article class="page-content">
-  
+  <div class="markdown-body">
+<p>该博客的灵感和搭建过程参考了Juse’s blog：<a target="_blank" rel="noopener" href="https://biojuse.com/">https://biojuse.com/</a></p>
+<h2 id="关于本站的一些警告"><a class="markdownIt-Anchor" href="#关于本站的一些警告"></a> 关于本站的一些警告</h2>
+<ul>
+<li>根据文章内容进行操作前，请做好备份，以免造成不可逆的损失。</li>
+<li>根据文章内容进行命令执行前，请注意电脑或服务器硬件配置是否满足需求</li>
+<li>本站所有内容仅代表个人观点，如果有任何问题，可以联系博主，请友好交流。</li>
+</ul>
+</div>
 
   
 
 </article>
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
 
 
 
@@ -407,6 +454,59 @@
 
 
 
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
 
