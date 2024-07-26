@@ -16,33 +16,27 @@
   <meta name="author" content="Feel Liao">
   <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
   
-    <meta name="description" content="fastp: A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.  fastp，它可以仅仅扫描FASTQ文件一次，就完成比FA">
+    <meta name="description" content="概述 转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有&#x2F;无参考基因组。  转录组上游分析 转录组上游分析一般有3种模式：  有参转录组上游分析 有参考基因组无注释文件上游分析或寻找新的转录本 无参考基因">
 <meta property="og:type" content="article">
-<meta property="og:title" content="fastp软件的使用">
-<meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/f2223f63.html">
+<meta property="og:title" content="转录组分析概述">
+<meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/3f4340b4.html">
 <meta property="og:site_name" content="Feel&#39;s Blog">
-<meta property="og:description" content="fastp: A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.  fastp，它可以仅仅扫描FASTQ文件一次，就完成比FA">
+<meta property="og:description" content="概述 转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有&#x2F;无参考基因组。  转录组上游分析 转录组上游分析一般有3种模式：  有参转录组上游分析 有参考基因组无注释文件上游分析或寻找新的转录本 无参考基因">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-6920178b4b210ff1e37089ff8e1b289d_720w.webp">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-202f214ad93c99a305f6b3510ddf3f78_720w.webp">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-78e31fe48bbdc53f5c1a1427b6170a53_720w.webp">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-ee5358c3a2a93af49171459278aa751e_720w.webp">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-c2ca5f1b36bf7c9010d43773dffaf66d_720w.webp">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-4d30aaf1dfe395d89d36d9ae5c3e135d_720w.webp">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-a69e014cd516d44ac2bb0d3cb8d6d67e_720w.webp">
-<meta property="article:published_time" content="2024-05-29T14:35:08.000Z">
-<meta property="article:modified_time" content="2024-07-26T12:03:02.710Z">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20231125161646.png">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20240301203118.png">
+<meta property="article:published_time" content="2024-07-26T12:06:41.000Z">
+<meta property="article:modified_time" content="2024-07-26T12:48:16.887Z">
 <meta property="article:author" content="Feel Liao">
 <meta property="article:tag" content="生物信息">
-<meta property="article:tag" content="生信软件使用">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-6920178b4b210ff1e37089ff8e1b289d_720w.webp">
+<meta name="twitter:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20231125161646.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>fastp软件的使用 - Feel&#39;s Blog</title>
+  <title>转录组分析概述 - Feel&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -254,7 +248,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="fastp软件的使用"></span>
+            <span id="subtitle" data-typed-text="转录组分析概述"></span>
           
         </div>
 
@@ -270,8 +264,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-29 22:35" pubdate>
-          2024年5月29日 晚上
+        <time datetime="2024-07-26 20:06" pubdate>
+          2024年7月26日 晚上
         </time>
       </span>
     
@@ -282,7 +276,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          1.8k 字
         
       </span>
     
@@ -293,7 +287,7 @@
         
         
         
-          18 分钟
+          15 分钟
         
       </span>
     
@@ -351,7 +345,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">fastp软件的使用</h1>
+            <h1 id="seo-header">转录组分析概述</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -364,55 +358,69 @@
             
               <div class="markdown-body">
                 
-                <blockquote>
-<p>fastp: A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/OpenGene/fastp">fastp</a>，它可以仅仅扫描FASTQ文件一次，就完成比FASTQC + cutadapt + Trimmomatic 这三个软件加起来的功能还多很多的功能，而且速度上比仅仅使用Trimmomatic一个软件还要快3倍左右，因为它使用C++开发，处处使用了高效算法，而且完美支持多线程！</p>
-<h2 id="fastp过滤测序序列"><a class="markdownIt-Anchor" href="#fastp过滤测序序列"></a> fastp过滤测序序列</h2>
-<h3 id="过滤"><a class="markdownIt-Anchor" href="#过滤"></a> 过滤</h3>
-<p>fastp可以对低质量序列，较多N的序列，该功能默认是启用的，但可以使用-Q参数关闭。使用-q参数来指定合格的phred质量值，比如-q 15表示质量值大于等于Q15的即为合格，然后使用-u参数来指定最多可以有多少百分比的质量不合格碱基。比如-q 15 -u 40表示一个read最多只能有40%的碱基的质量值低于Q15，否则会被扔掉。使用-n可以限定一个read中最多能有多少个N。</p>
-<p>fastp还默认启用了read长度过滤，但可以使用-L参数关闭。使用-l参数指定最低要求一个read有多长，比如-l 30表示低于30个碱基的read会被扔掉。这个功能可以用于实现常用的discard模式，以保证所有输出的序列都一样长。</p>
-<p>在fastp的HTML报告中，最头上的Summary表格很清楚地显示了过滤的统计信息，如下图所示：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-6920178b4b210ff1e37089ff8e1b289d_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<h3 id="接头处理"><a class="markdownIt-Anchor" href="#接头处理"></a> 接头处理</h3>
-<p>接头（adapter）污染的处理是FASTQ文件预处理中很重要的一步。fastp默认启用了接头处理，但是可以使用-A命令来关掉。fastp可以自动化地查找接头序列并进行剪裁，也就是说你可以不输入任何的接头序列，fastp全自动搞定了！对于SE数据，你还是可以-a参数来输入你的接头，而对于PE数据则完全没有必要，fastp基于PE数据的overlap分析可以更准确地查找接头，去得更干净，而且对于一些接头本身就有碱基不匹配情况处理得更好。fastp对于接头去除会有一个汇总的报告，如下图所示：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-202f214ad93c99a305f6b3510ddf3f78_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<h3 id="滑窗质量剪裁"><a class="markdownIt-Anchor" href="#滑窗质量剪裁"></a> 滑窗质量剪裁</h3>
-<p>很多时候，一个read的低质量序列都是集中在read的末端，也有少部分是在read的开头。fastp支持像Trimmomatic那样对滑动窗口中的碱基计算平均质量值，然后将不符合的滑窗直接剪裁掉。使用-5参数开启在5’端，也就是read的开头的剪裁，使用-3参数开启在3’端，也就是read的末尾的剪裁。使用-W参数指定滑动窗大小，默认是4，使用-M参数指定要求的平均质量值，默认是20，也就是Q20。</p>
-<h3 id="pe数据的碱基校正"><a class="markdownIt-Anchor" href="#pe数据的碱基校正"></a> PE数据的碱基校正</h3>
-<p>fastp支持对PE数据的每一对read进行分析，查找它们的overlap区间，然后对于overlap区间中不一致的碱基，如果发现其中一个质量非常高，而另一个非常低，则可以将非常低质量的碱基改为相应的非常高质量值的碱基值，如下图所示：</p>
-<p><img src="https://pic4.zhimg.com/80/v2-78e31fe48bbdc53f5c1a1427b6170a53_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>上图中所示的标红的T碱基是低质量序列，和高质量的A不匹配，它会被校正为A。该校正功能默认没有开启使用-c参数可以启用，对于一些对噪声容忍度低的应用，比如液体活检，建议开启。</p>
-<h3 id="全局剪裁"><a class="markdownIt-Anchor" href="#全局剪裁"></a> 全局剪裁</h3>
-<p>fastp可以对所有read在头部和尾部进行统一剪裁，该功能在去除一些测序质量不好的cycle比较有用，比如151*2的PE测序中，最后一个cycle通常质量是非常低的，需要剪裁掉。使用-f和-t分别指定read1的头部和尾部的剪裁，使用-F和-T分别指定read2的头部和尾部的剪裁。</p>
-<h3 id="polyg剪裁"><a class="markdownIt-Anchor" href="#polyg剪裁"></a> polyG剪裁</h3>
-<p>对于两色发光法的Illumina设备（NextSeq / NovaSeq），因为在没有光信号情况下base calling的结果会返回G，所以在序列的尾端可能会出现较多的polyG，需要被去除。fastp会自动化地识别NextSeq / NovaSeq的数据，然后进行polyG识别和剪裁。如果你想强制开启该功能，可以指定-g参数，如果想强制关闭该功能，则可以指定-G参数。</p>
-<h3 id="分子标签umi处理"><a class="markdownIt-Anchor" href="#分子标签umi处理"></a> 分子标签UMI处理</h3>
-<p>UMI在处理ctDNA类似的超低频突变检测应用中是十分有用的，为了更好地对带UMI的FASTQ文件进行预处理，fastp也很好地支持了UMI预处理功能。该功能默认没有启用，需要使用-U参数开启，另外需要使用–umi_loc来指定UMI所在的位置，它可以是（index1、 index2、 read1、 read2、 per_index、 per_read ）中的一种，分别表示UMI是在index位置上，还是在插入片段中。如果指定了是在插入序列中，还需要使用 --umi_len 参数来指定UMI所占的碱基长度。</p>
-<h3 id="输出文件切分"><a class="markdownIt-Anchor" href="#输出文件切分"></a> 输出文件切分</h3>
-<p>很多时候我们需要对输出的FASTQ进行切分，分成大小均匀的多个文件，这样可以使用比对软件并行地比对，提高并行处理的速度。fastp软件也提供了相应的功能，并且支持了两种模式，分别是使用参数-s指定切分后文件的个数，或者使用-S参数指定每个切分后文件的行数。</p>
-<h2 id="质控报告解读"><a class="markdownIt-Anchor" href="#质控报告解读"></a> 质控报告解读</h2>
-<p>接下来，我们再看一下如何理解fastp生成的质控报告。fastp的报告在单一文件中同时包含了过滤前和过滤后的统计结果，如果是PE数据，则同时包含了read1和read2的统计结果。之前我们已经说过了，fastp会生成HTML的报告和JSON格式的报告。HTML报告的默认文件名是fastp.html，但是可以通过-h参数修改，JSON报告的默认文件名是fastp.json，但是可以通过-j参数修改。而且fastp报告还有一个标题，默认是fastp report，这个也可以通过-R参数修改为你想要的标题。JSON格式的报告是优化过的，人机皆可读，适合进阶的用户使用程序解析，而这里我们重点关注HTML格式的报告。</p>
-<h3 id="质量分布曲线图"><a class="markdownIt-Anchor" href="#质量分布曲线图"></a> 质量分布曲线图</h3>
-<p>我们第一关注的当然是质量，所以fastp提供了质量分布曲线，即每一个cycle的平均质量值，而且fastp同时提供了A/T/C/G四种不同碱基的平均质量，以及总的平均质量，如下图所示：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-ee5358c3a2a93af49171459278aa751e_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>从上图我们可以看到，一共有5条曲线，分别是A/T/C/G和mean。而且HTML报告中的每一个项目和分项目都是可以点击进行隐藏和展开的。</p>
-<h3 id="碱基含量分布曲线"><a class="markdownIt-Anchor" href="#碱基含量分布曲线"></a> 碱基含量分布曲线</h3>
-<p>和质量分布曲线类似，碱基含量分布曲线也是按照每一个cycle来的，显示了每一个位置的碱基含量。如下图所示：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-c2ca5f1b36bf7c9010d43773dffaf66d_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p><img src="https://pic2.zhimg.com/80/v2-4d30aaf1dfe395d89d36d9ae5c3e135d_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>从图中可以看到，fastp同时显示了A/T/C/G/N/GC<br />
-的每一个位置的比例和总的比例。而且如果你觉得头部那里比较乱看不清的话，可以用鼠标拉一个框，它就放大了。</p>
-<h3 id="kmer统计表格"><a class="markdownIt-Anchor" href="#kmer统计表格"></a> KMER统计表格</h3>
-<p>fastp对5个碱基长度的所有组合的出现次数进行了统计，然后把它放在了一张表格中，表格的每一个元素为深背景白字，背景越深，则表示重复次数越多。这样，一眼望去，就可以发现有哪一些异常的信息。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-a69e014cd516d44ac2bb0d3cb8d6d67e_720w.webp" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>从上面的KMER表格中，我们可以发现，GGGGG的颜色特别深，从鼠标移上去之后显示的信息中我们可以发现它的出现次数是平均次数的12.8倍，这是不正常的，因为GGGGG的正常倍数应该在1倍左右。幸好我们有fastp，它可以过滤掉这种polyG，让数值较多地回归正常。</p>
-<h3 id="过表达序列overrepresented-sequence"><a class="markdownIt-Anchor" href="#过表达序列overrepresented-sequence"></a> 过表达序列(overrepresented sequence)</h3>
-<p>fastp的最新版本（v0.12）提供了overrepresetned<br />
-sequence的分析，而且不但提供了这些overrepresented sequence的序列个数和占比，还提供了他们在测序cycles中的分布情况，这有利于分析各种问题。具体示例如下图所示：</p>
-<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+                <h2 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h2>
+<p>转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有/无参考基因组。</p>
+<h2 id="转录组上游分析"><a class="markdownIt-Anchor" href="#转录组上游分析"></a> 转录组上游分析</h2>
+<p>转录组上游分析一般有3种模式：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/33601691">fastp: 一款超快速全功能的FASTQ文件自动化质控+过滤+校正+预处理软件</a></li>
+<li>有参转录组上游分析</li>
+<li>有参考基因组无注释文件上游分析或寻找新的转录本</li>
+<li>无参考基因组</li>
+</ul>
+<p><img src="/assets/Pastedimage20231125161646.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1186/s13059-016-0881-8">10.1186/s13059-016-0881-8</a></p>
+<h3 id="测序数据及质量控制"><a class="markdownIt-Anchor" href="#测序数据及质量控制"></a> 测序数据及质量控制</h3>
+<p>测序数据主要由fastq格式提供，包含测序片段的序列信息和相应的测序质量打分，每条read由四行描述信息组成：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@ST-E00600:</span><span class="hljs-number">42</span>:<span class="hljs-attribute">H3JYTALXX</span>:<span class="hljs-number">1</span>:<span class="hljs-number">1101</span>:<span class="hljs-number">1217</span>:<span class="hljs-number">1000</span> <span class="hljs-number">1</span>:<span class="hljs-attribute">N</span>:<span class="hljs-number">0</span>:TCCGTCTA<br>GGCCAAAAAGGGGGAGTGGGTGGGTAGGGGAGTGCCAGGGCCAAAAAGGGGGAGTGGGTGGGTAGGGGAGTGGGGGTGGGTGGGTATGGGGGACTTTTGGTATAGCATTGAAAATGTAAATGAGCTAAATACCTAATAAAAAATGGAAAA<br>+<br><span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<br></code></pre></td></tr></table></figure>
+<ol>
+<li>第一行以<code>@</code>开头，后面包含测序标识符和描述文字</li>
+<li>第二行为测序片段的序列信息</li>
+<li>第三行以<code>+</code>开头，后面为测序标识符</li>
+<li>第四行为测序片段的质量值。</li>
+</ol>
+<h3 id="测序数据过滤"><a class="markdownIt-Anchor" href="#测序数据过滤"></a> 测序数据过滤</h3>
+<p>使用过滤软件保留高质量的序列数据，去除接头序列，参考过滤标准：</p>
+<ol>
+<li>去除带接头（adapter）的 reads；</li>
+<li>当任一测序read中N含量超过该read碱基数的10%时，去除此paired reads；</li>
+<li>当任一测序read中含有的低质量（Q&lt;=20）碱基数超过该条read碱基数的50%时，去除此paired reads。</li>
+</ol>
+<h3 id="测序错误分布"><a class="markdownIt-Anchor" href="#测序错误分布"></a> 测序错误分布</h3>
+<p>当前RNA-seq测序技术，测序错误率分布存在以下两个特征：</p>
+<ol>
+<li>测序错误率随着测序序列(Sequenced Reads)长度的增加而升高。这是由测序过程中化学试剂的消耗导致的；</li>
+<li>前6个碱基具有较高的测序错误率，此长度恰好为RNA-seq建库过程中反转录所需的随机引物长度。前6个碱基测序错误率较高是因为随机引物和RNA模版的不完全结合</li>
+</ol>
+<h3 id="gc含量分布"><a class="markdownIt-Anchor" href="#gc含量分布"></a> GC含量分布</h3>
+<p>GC含量分布检查用于检测有无 AT、GC 分离现象。由于序列的随机打断和双链互补原则，理论上测序读段在每个位置的 GC 及 AT 含量应分别相等，且在整个测序过程基本稳定不变。但由于反转录使用的是 6 bp 随机引物，因此前几位碱基在核苷酸组成上会有一定偏好性，产生正常波动，随后则趋于稳定。</p>
+<h2 id="转录组下游分析"><a class="markdownIt-Anchor" href="#转录组下游分析"></a> 转录组下游分析</h2>
+<p>进行差异表达基因的筛选，也可将转录本比对到参考序列后进行基因结构方面的分析。</p>
+<p><strong>转录组生物信息分析流程如下图所示：</strong></p>
+<p><img src="/assets/Pastedimage20240301203118.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h3 id="新转录本预测"><a class="markdownIt-Anchor" href="#新转录本预测"></a> 新转录本预测</h3>
+<p>根据比对上基因组的 reads 的位置信息，使用<code>StringTie</code>将 reads 组装成转录本。 StringTie 应用网络流算法和可选的从头组装（denovo）来拼接转录本。拼接得到的转录本再使用 <code>GffCompare</code> 与基因组的注释信息比较，从中发现新转录本或新基因。</p>
+<h3 id="可变剪切鉴定"><a class="markdownIt-Anchor" href="#可变剪切鉴定"></a> 可变剪切鉴定</h3>
+<p>可变剪接(Alternative Splicing, AS)，是大多数真核生物细胞中普遍的一种基因表达方式。真核细胞的基因序列包含内含子(intron)与外显子(exon)，在基因转录成mRNA前体后内含子会被RNA剪接体移除，而外显子则保留于成熟mRNA中。一条未经剪接的RNA，可以具有多种外显子剪接形式，因此使得一个基因在不同时间、不同环境中可以翻译出不同的蛋白质，进而增加其生理状况下系统的复杂性或适应性。转录组数据的可变剪接分析使用<code>rMATS</code>实现</p>
+<h3 id="snpindel检测"><a class="markdownIt-Anchor" href="#snpindel检测"></a> SNP/InDel检测</h3>
+<p>单核苷酸多态性（Single Nucleotide Polymorphism，SNP）指基因组上由单个核苷酸变异形成的遗传标记。SNP 标记具有多态性丰富、分布广、遗传稳定性强等特点，而且可以实现高通量、自动化检测，具有低成本、高效的优点，因而成为研究生物表型与基因型之间关系的重要桥梁。插入/缺失（Insertion-Deletion，InDel）是指在近缘种或同一物种不同个体之间基因组同一位点的序列发生了不同大小核苷酸片段的插入或缺失，即一个序列上某一位点相比同源的另一个序列插入或缺失了一个或多个碱基。InDel 标记因其稳定性好、多态性高、分型系统简单，已广泛应用于动植物群体遗传分析、分子辅助育种等领域。一般而言，SNP 是指变异频率大于 1 % 的单核苷酸变异，InDel 的长度大部分在 50 bp 以内。</p>
+<p>由于部分 mRNA 会经历 RNA 编辑（RNA editing），即转录后的 RNA 在编码区发生碱基的插入、删除或替换，产生多态性的基因表达产物。从比对结果来看，SNP 和单碱基替换的 RNA 编辑结果相同。因此通过转录组测序数据检测到的 SNP 和 InDel 难免含有 RNA 编辑的产物。SNP 和 InDel的检测使用<code>GATK</code>实现，注释使用<code>ANNOVAR</code>实现</p>
+<h3 id="基因功能注释"><a class="markdownIt-Anchor" href="#基因功能注释"></a> 基因功能注释</h3>
+<p>从基因组中提取基因的序列，使用 diamond将新基因与 KEGG、GO、NR、Swiss-Prot、TrEMBL、KOG 数据库序列比对得到注释结果，比对条件为Evalue 1e-5。植物转录因子预测使用iTAK软件，iTAK 整合了两个数据库，PlnTFDB 和 PlantTFDB。动物转录因子鉴定使用动物转录因子数据库animalTFDB</p>
+<p><a target="_blank" rel="noopener" href="https://yanzhongsino.github.io/2021/05/17/omics_genome.annotation_function/">基因组注释（三）：基因功能注释 | 生信技工 (yanzhongsino.github.io)</a></p>
+<h3 id="基因表达定量"><a class="markdownIt-Anchor" href="#基因表达定量"></a> 基因表达定量</h3>
+<p>根据比对结果和基因在参考基因组上的位置信息，统计每个基因的reads数量。一个转录本的片段数目与测序数据（或Mapped Data）量、转录本长度、转录本表达水平都有关，为了让片段数目能真实地反映转录本表达水平，需要对样品中的Mapped Reads的数目和转录本长度进行归一化。</p>
+<h3 id="差异表达分析"><a class="markdownIt-Anchor" href="#差异表达分析"></a> 差异表达分析</h3>
+<p>GO功能显著性富集分析，KEGG信号通路富集分析，WCGNA，聚类分析，PCA</p>
+<p>**DESeq2、edgeR 和 limma ** 三大包可以说是做转录组差异分析的金标准，大多数转录组的文章都是用这三个 R 包进行差异分析的。</p>
+<p>首先，做差异分析需要的数据有：<strong>表达矩阵</strong>和<strong>分组信息</strong>。</p>
+<p><strong>DESeq2、edgeR 和 limma 包都建议使用 Counts，也就是原始计数数据作为输入进行分析，最好不要使用 FPKM、TPM 等归一化后的数据</strong></p>
+<p>官方参考教程：<strong><a target="_blank" rel="noopener" href="https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html">DESeq2</a></strong>、<strong><a target="_blank" rel="noopener" href="https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf">edgeR</a></strong>、<strong><a target="_blank" rel="noopener" href="https://www.bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">limma</a></strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/hbctraining/DGE_workshop_salmon_online">DEG-workshop</a></p>
+<h2 id="参考资料"><a class="markdownIt-Anchor" href="#参考资料"></a> 参考资料</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/687766131808">转录组分析流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/591064168">RNA-seq转录组数据分析丨一套完整的案例流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/653841949">差异分析三巨头 —— DESeq2、edgeR 和 limma 包</a></li>
 </ul>
 
                 
@@ -449,8 +457,6 @@ sequence的分析，而且不但提供了这些overrepresented sequence的序列
       
         <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" class="print-no-link">#生物信息</a>
       
-        <a href="/tags/%E7%94%9F%E4%BF%A1%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8/" class="print-no-link">#生信软件使用</a>
-      
     </div>
   
 </div>
@@ -461,8 +467,8 @@ sequence的分析，而且不但提供了这些overrepresented sequence的序列
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>fastp软件的使用</div>
-      <div>https://blog.stariverfeel.eu.org/posts/f2223f63.html</div>
+      <div>转录组分析概述</div>
+      <div>https://blog.stariverfeel.eu.org/posts/3f4340b4.html</div>
     </div>
     <div class="license-meta">
       
@@ -474,7 +480,7 @@ sequence的分析，而且不但提供了这些overrepresented sequence的序列
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月29日</div>
+          <div>2024年7月26日</div>
         </div>
       
       
@@ -511,15 +517,15 @@ sequence的分析，而且不但提供了这些overrepresented sequence的序列
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/94b5d431.html" title="差异表达分析">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">差异表达分析</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/posts/7393dc5b.html" title="基因组结构注释">
+                        <span class="hidden-mobile">基因组结构注释</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
