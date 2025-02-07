@@ -16,18 +16,21 @@
   <meta name="author" content="Feel Liao">
   <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
   
-    <meta name="description" content="记录生活，分享感动">
+    <meta name="description" content="编译安卓内核需要需要对应设备的内核源码，安卓手机的内核源码一般可以在github上面搜索到或者在google内核开放网址：https:&#x2F;&#x2F;android.googlesource.com&#x2F;kernel&#x2F;manifest，如果机型较新，可能没有对应的内核源码。 编译操作系统：Ubuntu-22.04 我们本次编译的安卓内核以common-android13-5.15为例，也是通用的编译方法 安装依赖">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安卓内核编译+驱动编译+打包成boot刷入">
 <meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/27a87966.html">
 <meta property="og:site_name" content="Feel&#39;s Blog">
-<meta property="og:description" content="记录生活，分享感动">
+<meta property="og:description" content="编译安卓内核需要需要对应设备的内核源码，安卓手机的内核源码一般可以在github上面搜索到或者在google内核开放网址：https:&#x2F;&#x2F;android.googlesource.com&#x2F;kernel&#x2F;manifest，如果机型较新，可能没有对应的内核源码。 编译操作系统：Ubuntu-22.04 我们本次编译的安卓内核以common-android13-5.15为例，也是通用的编译方法 安装依赖">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/ver_control.png">
 <meta property="article:published_time" content="2025-02-07T07:26:31.000Z">
-<meta property="article:modified_time" content="2025-02-07T07:26:31.436Z">
+<meta property="article:modified_time" content="2025-02-07T08:59:18.725Z">
 <meta property="article:author" content="Feel Liao">
-<meta property="article:tag" content="生信, 计算机, 网络, 代码, 博客">
+<meta property="article:tag" content="安卓内核">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.stariverfeel.eu.org/assets/ver_control.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -273,7 +276,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          488 字
         
       </span>
     
@@ -284,7 +287,7 @@
         
         
         
-          1 分钟
+          5 分钟
         
       </span>
     
@@ -355,7 +358,37 @@
             
               <div class="markdown-body">
                 
-                
+                <p>编译安卓内核需要需要对应设备的内核源码，安卓手机的内核源码一般可以在github上面搜索到或者在google内核开放网址：<a target="_blank" rel="noopener" href="https://android.googlesource.com/kernel/manifest%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%9C%BA%E5%9E%8B%E8%BE%83%E6%96%B0%EF%BC%8C%E5%8F%AF%E8%83%BD%E6%B2%A1%E6%9C%89%E5%AF%B9%E5%BA%94%E7%9A%84%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E3%80%82">https://android.googlesource.com/kernel/manifest，如果机型较新，可能没有对应的内核源码。</a></p>
+<p>编译操作系统：Ubuntu-22.04</p>
+<p>我们本次编译的安卓内核以common-android13-5.15为例，也是通用的编译方法</p>
+<p>安装依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig dwarves<br></code></pre></td></tr></table></figure>
+<h2 id="下载安卓内核源代码和构建工具"><a class="markdownIt-Anchor" href="#下载安卓内核源代码和构建工具"></a> 下载安卓内核源代码和构建工具</h2>
+<p>对于最新的内核，可以使用 repo 下载源代码、工具链和构建脚本。一些内核（例如 Pixel 3 内核）需要从多个 git 仓库获取源代码，而其他内核（如通用内核）只需要一份源代码。使用 repo 方法可确保源目录设置正确。</p>
+<p>下载相应分支的源代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#创建内核根目录并进入</span><br><span class="hljs-built_in">mkdir</span> android-kernel &amp;&amp; <span class="hljs-built_in">cd</span> android-kernel<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#初始化common-android13-5.15内核源码</span><br>repo init -u https://android.googlesource.com/kernel/manifest -b common-android13-5.15<br></code></pre></td></tr></table></figure>
+<p>如果无法连接谷歌，可以尝试<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/">清华大学镜像源AOSP</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#同步仓库</span><br>repo <span class="hljs-built_in">sync</span><br></code></pre></td></tr></table></figure>
+<h2 id="下载安卓内核驱动源码rwprocmem33"><a class="markdownIt-Anchor" href="#下载安卓内核驱动源码rwprocmem33"></a> 下载安卓内核驱动源码rwProcMem33</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#这里和内核源码分开放</span><br><span class="hljs-built_in">cd</span> ..<br><br>git <span class="hljs-built_in">clone</span> https://github.com/abcz316/rwProcMem33.git<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#将驱动源码复制到内核drivers里面来进行编译</span><br><span class="hljs-built_in">cp</span> -r rwProcMem33/rwProcMem33Module/rwProcMem_module/ android-kernel/drivers/rwProcMem<br></code></pre></td></tr></table></figure>
+<p>驱动放到内核源码根目录下的的drivers目录下, 修改rwProcMem33驱动的Makefile文件(drivers/rwProcMem/Makefile)为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">obj-m += rwProcMem.o<br></code></pre></td></tr></table></figure>
+<p>将drivers目录下的Makefile文件(drivers/Makefile)加一行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">obj-m += rwProcMem/<br></code></pre></td></tr></table></figure>
+<p>以驱动模块加载</p>
+<h2 id="修改驱动源代码"><a class="markdownIt-Anchor" href="#修改驱动源代码"></a> 修改驱动源代码</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim drivers/rwProcMem/ver_control.h<br></code></pre></td></tr></table></figure>
+<p>开启53行宏定义，将54行给注释掉</p>
+<p><img src="/assets/ver_control.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h2 id="开始编译"><a class="markdownIt-Anchor" href="#开始编译"></a> 开始编译</h2>
+<p>在内核源代码根目录执行开始编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh<br></code></pre></td></tr></table></figure>
+<p>这里需要比较长的时间</p>
+<p>启动映像位于 <code>out/android13-5.15/dist/boot.img</code></p>
+<p>驱动模块位于  <code>out/android13-5.15/common/drivers/rwProcMem/rwProcMem.ko</code></p>
+
                 
               </div>
             
@@ -363,6 +396,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91/" class="category-chain-item">开发</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%89%E5%8D%93%E5%86%85%E6%A0%B8/" class="print-no-link">#安卓内核</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+    </div>
   
 </div>
 
