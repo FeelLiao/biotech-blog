@@ -1,0 +1,848 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/webicon.png">
+  <link rel="icon" href="/assets/webicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feel Liao">
+  <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
+  
+    <meta name="description" content="差异分析三巨头 DESeq2、edgeR、limma DESeq2、edgeR、limma是转录组差异分析的金标准，大多数转录组的文章和公司都是使用这三个R包做转录组的差异基因分析。 做差异基因表达分析需要的数据有：表达矩阵、分组信息  表达矩阵：即上游分析得到的每个基因在每个样本中的reads数，这里所使用的差异分析包都要求原始reads数的格式输入。 分组信息：即一个实验设计矩阵，包含每一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="差异表达分析">
+<meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/94b5d431.html">
+<meta property="og:site_name" content="Feel&#39;s Blog">
+<meta property="og:description" content="差异分析三巨头 DESeq2、edgeR、limma DESeq2、edgeR、limma是转录组差异分析的金标准，大多数转录组的文章和公司都是使用这三个R包做转录组的差异基因分析。 做差异基因表达分析需要的数据有：表达矩阵、分组信息  表达矩阵：即上游分析得到的每个基因在每个样本中的reads数，这里所使用的差异分析包都要求原始reads数的格式输入。 分组信息：即一个实验设计矩阵，包含每一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-01T09:25:03.000Z">
+<meta property="article:modified_time" content="2025-02-07T06:37:23.187Z">
+<meta property="article:author" content="Feel Liao">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="生信软件使用">
+<meta property="article:tag" content="R语言">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>差异表达分析 - Feel&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/custom/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.stariverfeel.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"bash"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Feel&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>文章</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/archives/" target="_self">
+                    <i class="iconfont icon-archive-fill"></i>
+                    <span>归档</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/" target="_self">
+                    <i class="iconfont icon-tags-fill"></i>
+                    <span>标签</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/" target="_self">
+                    <i class="iconfont icon-category-fill"></i>
+                    <span>分类</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/messageboard/" target="_self">
+                <i class="iconfont icon-speakernotes"></i>
+                <span>留言板</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/myself/" target="_self">
+                <i class="iconfont icon-addrcard"></i>
+                <span>我自己</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-guanyu1"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/post_banner.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="差异表达分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Feel Liao
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-01 17:25" pubdate>
+          2024年6月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">差异表达分析</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年2月7日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="差异分析三巨头-deseq2-edger-limma"><a class="markdownIt-Anchor" href="#差异分析三巨头-deseq2-edger-limma"></a> 差异分析三巨头 DESeq2、edgeR、limma</h2>
+<p>DESeq2、edgeR、limma是转录组差异分析的金标准，大多数转录组的文章和公司都是使用这三个R包做转录组的差异基因分析。</p>
+<p>做差异基因表达分析需要的数据有：<strong>表达矩阵、分组信息</strong></p>
+<ol>
+<li><strong>表达矩阵</strong>：即上游分析得到的每个基因在每个样本中的reads数，这里所使用的差异分析包都要求原始reads数的格式输入。</li>
+<li><strong>分组信息</strong>：即一个实验设计矩阵，包含每一个测序样本属于哪一个实验组或者对照组。</li>
+</ol>
+<blockquote>
+<p>如果想要实现<strong>每个组之间的差异比较</strong>（相当于比较两个组之间哪些基因的表达存在差异，并求得这种差异的统计显著性），则还需要设置比较矩阵，具体设计方法可以参考每个包的说明文档。一般来说如果不设置的话，默认输出中不包含每个组的多重比较结果。</p>
+</blockquote>
+<h2 id="包简介"><a class="markdownIt-Anchor" href="#包简介"></a> 包简介</h2>
+<p>对于有生物学重复的样品，使用DESeq2进行样品组间的差异表达分析，获得两个生物学条件之间的差异表达基因集；对于无生物学重复我们使用edgeR。这里只是一般的使用状态，没有绝对性，比如，edgeR在有生物学重复的情况下也能使用，只是在识别差异基因的能力和出现假阳性结果等方面两个包存在不同而已。上文提到的三个R包做差异分析都要求输入基因的未经过标准化的 reads 计数数据，而不能是 RPKM、FPKM 等经过标准化的数据。</p>
+<p>差异分析之后，还需要用 Benjamini-Hochberg 方法对假设检验概率（P value）进行多重假设检验校正，得到错误发现率（False Discovery Rate，FDR）。差异基因的筛选条件为 |log2Fold Change| &gt;= 1（建议值，可根据实际情况进行调整），且 FDR &lt; 0.05</p>
+<h3 id="deseq2"><a class="markdownIt-Anchor" href="#deseq2"></a> DESeq2</h3>
+<p>DESeq2 基于负二项分布模型，考虑了基因表达数据的离散性和变异性，以及库大小差异对差异分析的影响。DESeq2 通过正态化转换和归一化来减少样本间的技术变异，然后估计基因表达的离散性。它使用负二项分布模型来鉴定差异表达基因，并校正多重检验问题。DESeq2 适用于小样本 RNA 测序数据，特别是在样本数较少的情况下表现较好，能够有效地处理样本间的差异、技术性噪音和批次效应。</p>
+<h3 id="edger"><a class="markdownIt-Anchor" href="#edger"></a> edgeR</h3>
+<p>edgeR 与 DESeq2类似，edgeR 也考虑了数据的离散性。它使用负二项分布模型和不同的归一化方法，如 TMM（Trimmed Mean of M values），来处理样本之间的技术变异。edgeR 使用一个假设检验框架来鉴定差异表达基因，并采用了类似于 Benjamini-Hochberg 方法的多重检验校正。edgeR 在样本较多的情况下表现较好，适用于中等规模的 RNA 测序数据，具有较高的灵敏度和精确度。使用 edgeR 时注意选择合适的分析算法，<strong>官方建议 bulk RNA-seq 选择 quasi-likelihood(QL) F-test tests，scRNA-seq 或是没有重复样品的数据选用 likelihood ratio test</strong>。</p>
+<h3 id="limma"><a class="markdownIt-Anchor" href="#limma"></a> limma</h3>
+<p><strong>DESeq2和edgeR都由limma二次开发而来</strong></p>
+<p>limma 最初是针对基因芯片数据开发的，但后来也被应用于 RNA 测序数据。limma 基于线性模型，使用加权最小二乘法来估计基因表达的差异，并通过贝叶斯方法来校正多重检验问题。limma 在处理大规模数据时表现出色，适用于高通量数据分析，如芯片和大规模RNA测序数据，能够很好地控制假阳性率。</p>
+<p>limma 适用于各种类型的高通量数据，包括芯片数据和 RNA-seq。它要求每个基因的表达值，可以是原始计数也可以是已经归一化的表达值。limma 进行差异分析有两种方法 ：limma-trend 和 voom。在样本测序深度相差不大时两种方法差距不大，而测序深度相差大时 voom 更有优势，因此我们一般都选择 voom 的方法进行差异分析</p>
+<h3 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h3>
+<ol>
+<li>limma 包做差异分析要求数据满足正态分布或近似正态分布，如基因芯片、TPM 格式的高通量测序数据。</li>
+<li>通常认为 Counts 数据不符合正态分布而服从泊松分布。所以对于 Counts 数据来说，用 limma 包进行差异分析，误差较大。</li>
+<li>edgeR 差异分析速度快，得到的基因数目比较多，假阳性高（实际不差异，结果差异）；DESeq2 差异分析速度慢，得到的基因数目比较少，假阴性高（实际差异，结果不差异）。</li>
+<li>DESeq2 更关注在小样本条件下的差异分析，提供了一些特有的统计模型和方法。edgeR 强调对技术性噪音和样本之间的变异性进行建模，特别适用于样本数量较大的数据集。limma 则是一种通用的差异分析方法，适用于各种高通量表达数据，不仅适用于 RNA-seq 数据，也适用于其他类型的表达数据，如芯片数据。</li>
+</ol>
+<h2 id="设计对比矩阵"><a class="markdownIt-Anchor" href="#设计对比矩阵"></a> 设计对比矩阵</h2>
+<p><strong>DESeq2</strong></p>
+<p>在使用<code>DESeq()</code>函数计算差异基因过后，可以使用<code>resultsNames()</code>函数查看默认对比组别，这里默认使用第一个组来做对照组，组别之间的差异基因都是跟对照组来比的。如果需要自定义各个组别之间的对比，或者组别为时间序列等其他特殊情况的话，则需要自己设计对比矩阵，可以参考<a target="_blank" rel="noopener" href="https://github.com/tavareshugo/tutorial_DESeq2_contrasts">tavareshugo/tutorial_DESeq2_contrasts (github.com)</a>这篇文章。注意，<strong>DESeq2对直接的所有组别两两对比并不友好，如果要使用，建议用edgeR包。</strong></p>
+<p><strong>edgeR</strong></p>
+<p>在使用<code>glmQLFTest()</code>函数计算差异基因时，可以指定<code>contrast</code>参数，该参数接受一个<code>makeContrasts()</code>，该函数有两个参数<code>contrasts</code>和<code>levels</code>，<code>contrasts</code>描述了组别的对比关系，<code>levels</code>描述了不同的组别。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment">#A, B, C 三组分别两两比较</span><br>makeContrasts<span class="hljs-punctuation">(</span>B<span class="hljs-operator">-</span>A<span class="hljs-punctuation">,</span>C<span class="hljs-operator">-</span>B<span class="hljs-punctuation">,</span>C<span class="hljs-operator">-</span>A<span class="hljs-punctuation">,</span>levels<span class="hljs-operator">=</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;C&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment">#A, B, C 三组满足更复杂的函数关系式</span><br>makeContrasts<span class="hljs-punctuation">(</span>contrasts<span class="hljs-operator">=</span><span class="hljs-string">&quot;A(B+C)/2&quot;</span><span class="hljs-punctuation">,</span>levels<span class="hljs-operator">=</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;C&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+<p>更详细的对比设计参考<a target="_blank" rel="noopener" href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html">A guide to creating design matrices for gene expression experiments (bioconductor.org)</a></p>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/653841949">看完还不会来揍我 | 差异分析三巨头 —— DESeq2、edgeR 和 limma 包 | 附完整代码 + 注释 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow_CHN.html">使用limma、Glimma和edgeR，RNA-seq数据分析易如反掌 (bioconductor.org)</a></li>
+<li><a target="_blank" rel="noopener" href="https://f1000research.com/articles/5-1438/v2">From reads to genes to pathways: differential… | F1000Research</a></li>
+<li><a target="_blank" rel="noopener" href="https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#contrasts">Analyzing RNA-seq data with DESeq2 (bioconductor.org)</a></li>
+<li><a target="_blank" rel="noopener" href="https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#differential-expression-analysis">RNA-seq workflow: gene-level exploratory analysis and differential expression (bioconductor.org)</a></li>
+<li><a target="_blank" rel="noopener" href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02648-4">Exaggerated false positives by popular differential expression methods when analyzing human population samples | Genome Biology | Full Text (biomedcentral.com)</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90/" class="category-chain-item">转录组分析</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" class="print-no-link">#生物信息</a>
+      
+        <a href="/tags/%E7%94%9F%E4%BF%A1%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8/" class="print-no-link">#生信软件使用</a>
+      
+        <a href="/tags/R%E8%AF%AD%E8%A8%80/" class="print-no-link">#R语言</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>差异表达分析</div>
+      <div>https://blog.stariverfeel.eu.org/posts/94b5d431.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feel Liao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月1日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/ff7f7414.html" title="使用LaTeX进行数学公式输入">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用LaTeX进行数学公式输入</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/f2223f63.html" title="fastp软件的使用">
+                        <span class="hidden-mobile">fastp软件的使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"FeelLiao/biotech-blog","repo-id":"R_kgDOMCN8VA","category":"Announcements","category-id":"DIC_kwDOMCN8VM4CgsO-","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN","loading":"lazy","crossorigin":"anonymous"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <span>框架 </span><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <span> | </span>  <span>主题 </span><a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span>  <span>加速 </span><a href="https://dash.cloudflare.com" target="_blank" rel="nofollow noopener"><span>Cloudflare</span></a> <span> | </span>  <span>部署 </span><a href="https://pages.github.com" target="_blank" rel="nofollow noopener"><span>Github Pages</span></a> <span> | </span>  <a href="https://icp.gov.moe/?keyword=20240218" target="_blank">萌ICP备20240218号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/custom/custom.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

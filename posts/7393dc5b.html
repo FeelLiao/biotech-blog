@@ -1,0 +1,936 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/webicon.png">
+  <link rel="icon" href="/assets/webicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feel Liao">
+  <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
+  
+    <meta name="description" content="基因组注释分为结构注释和功能注释。 结构注释能够帮助我们获取基因组上详细的基因分布和结构信息，是功能注释和进化分析的重要基础。基因结构预测包括预测基因组中的基因位点、开放性阅读框架（ORF）、翻译起始位点和终止位点、内含子和外显子区域、启动子、可变剪切位点以及蛋白质编码序列等等。 功能注释可以帮助我们进一步获得基因的功能信息，包括预测基因中的模序和结构域、蛋白质的功能和所在的生物学通路等 基因结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基因组结构注释">
+<meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/7393dc5b.html">
+<meta property="og:site_name" content="Feel&#39;s Blog">
+<meta property="og:description" content="基因组注释分为结构注释和功能注释。 结构注释能够帮助我们获取基因组上详细的基因分布和结构信息，是功能注释和进化分析的重要基础。基因结构预测包括预测基因组中的基因位点、开放性阅读框架（ORF）、翻译起始位点和终止位点、内含子和外显子区域、启动子、可变剪切位点以及蛋白质编码序列等等。 功能注释可以帮助我们进一步获得基因的功能信息，包括预测基因中的模序和结构域、蛋白质的功能和所在的生物学通路等 基因结构">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/image-20240709154230086.png">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/image-20240709165408313.png">
+<meta property="article:published_time" content="2024-07-26T12:00:29.000Z">
+<meta property="article:modified_time" content="2025-02-07T06:37:23.187Z">
+<meta property="article:author" content="Feel Liao">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="生信软件使用">
+<meta property="article:tag" content="结构注释">
+<meta property="article:tag" content="基因组注释">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.stariverfeel.eu.org/assets/image-20240709154230086.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>基因组结构注释 - Feel&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/custom/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.stariverfeel.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"bash"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Feel&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>文章</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/archives/" target="_self">
+                    <i class="iconfont icon-archive-fill"></i>
+                    <span>归档</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/" target="_self">
+                    <i class="iconfont icon-tags-fill"></i>
+                    <span>标签</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/" target="_self">
+                    <i class="iconfont icon-category-fill"></i>
+                    <span>分类</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/messageboard/" target="_self">
+                <i class="iconfont icon-speakernotes"></i>
+                <span>留言板</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/myself/" target="_self">
+                <i class="iconfont icon-addrcard"></i>
+                <span>我自己</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-guanyu1"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/post_banner.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基因组结构注释"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Feel Liao
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-26 20:00" pubdate>
+          2024年7月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">基因组结构注释</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年2月7日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>基因组注释分为结构注释和功能注释。</strong></p>
+<p>结构注释能够帮助我们获取基因组上详细的基因分布和结构信息，是功能注释和进化分析的重要基础。基因结构预测包括预测基因组中的基因位点、开放性阅读框架（ORF）、翻译起始位点和终止位点、内含子和外显子区域、启动子、可变剪切位点以及蛋白质编码序列等等。</p>
+<p>功能注释可以帮助我们进一步获得基因的功能信息，包括预测基因中的模序和结构域、蛋白质的功能和所在的生物学通路等</p>
+<p>基因结构注释流程：</p>
+<p><img src="/assets/image-20240709154230086.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p><strong>注意：在开始基因组结构注释前，最好将所有碱基全部改成大写形式</strong>，因为小写碱基有些软件是识别成soft-masked的形式，影响注释预测，edta的TIR预测和geta软件都有可能报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">seqkit <span class="hljs-built_in">seq</span> -u genome.fa &gt; genome.upper.fa<br></code></pre></td></tr></table></figure>
+<h2 id="重复序列注释"><a class="markdownIt-Anchor" href="#重复序列注释"></a> 重复序列注释</h2>
+<p><strong>❗❗❗ 重复序列的注释非常重要，如果跳过这一步，会对基因组结构注释的准确性造成很大影响</strong></p>
+<p>重复序列在基因组中占有非常高的比例，根据分布将重复序列分为串联重复（Tandem repeats）和散布重复（Dispersed repeats）</p>
+<p><img src="/assets/image-20240709165408313.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>对重复序列的注释一般是做基因组注释的第一步，常用的基因组重复序列注释软件有<code>RepeatMasker</code>, <code>RepeatModeler</code>, <code>EDTA</code></p>
+<p>大部分情况下<code>ReapeatMasker</code>的数据库中<strong>没有待注释物种的近缘种</strong>，此时最好用RepeatModeler等软件进行自我训练，用<strong>denovo预测来构建重复序列数据库</strong>。即使数据库中已有近缘种，有时候<strong>Repbase注释重复区的效果不是很好，也推荐进行自我训练。</strong></p>
+<p>这里首先使用<code>RepeatModeler</code>对基因组重复序列进行自我训练，从头预测重复序列，构建数据库。随后使用<code>RepeatMasker</code>对基因组重复序列进行标注</p>
+<h3 id="repeatmasker-repeatmodeler的安装"><a class="markdownIt-Anchor" href="#repeatmasker-repeatmodeler的安装"></a> <code>RepeatMasker</code>, <code>RepeatModeler</code>的安装</h3>
+<p>这两个软件都不推荐从源码安装，安装依赖多的容易让人怀疑人生。</p>
+<p>这里提供两种安装方式</p>
+<p><code>conda</code>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">mamba install bioconda::repeatmasker -c conda-forge<br>mamba install bioconda::repeatmodeler -c conda-forge<br></code></pre></td></tr></table></figure>
+<p>这里推荐指定两个conda chanel, bioconda和conda-forge，提高安装成功率。有很多依赖包在conda-forge里才能找到。这里同样也推荐新建conda环境，用于这两个软件的安装。</p>
+<p><code>mamba</code>是<code>conda</code>的C++语言版本替代，可以大幅提高<code>conda</code>的响应时间。<a target="_blank" rel="noopener" href="https://github.com/mamba-org/mamba">mamba-org/mamba: The Fast Cross-Platform Package Manager (github.com)</a></p>
+<p><code>docker</code>安装</p>
+<p>这里使用了由Dfam团队维护的docker镜像进行安装，也可以在github中克隆项目，自己构建镜像。<a target="_blank" rel="noopener" href="https://github.com/Dfam-consortium/TETools">Dfam-consortium/TETools: Dfam Transposable Element Tools Docker container. (github.com)</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull dfam/tetools<br>docker run  --name tetools -v &lt;host path&gt;:&lt;container path&gt; dfam/tetools<br><span class="hljs-comment"># 进入容器执行命令</span><br>docker <span class="hljs-built_in">exec</span> -it tetools bash<br></code></pre></td></tr></table></figure>
+<ul>
+<li>这里使用了<code>-v</code>选项来将宿主目录挂载到容器内，如果需要对<code>RepeatModeler</code>的Libraries进行更改，就可以先将相关目录挂载到容器内，再对容器内的<code>/opt/RepeatMasker/Libraries</code>目录进行修改。</li>
+<li>Dfam团队的官方镜像很大，解压过后更是达到了90GB以上，可以考虑自己从源码构建镜像。</li>
+</ul>
+<h3 id="repeatmodeler的使用"><a class="markdownIt-Anchor" href="#repeatmodeler的使用"></a> <code>RepeatModeler</code>的使用</h3>
+<p>建库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">BuildDatabase -name sample sample.fa<br></code></pre></td></tr></table></figure>
+<p>自我训练</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">nohup</span> RepeatModeler -threads 30 -database sample -LTRStruct 2&gt;&amp;1 &gt; output.log &amp;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>总共跑6轮，前4轮有几分钟到几十分钟的<code>-threads</code>超负荷运行，后两轮每轮会有长达十几个小时的<code>-threads</code>超负荷运行</li>
+<li>自我训练过程需要耗费数天</li>
+<li>如果基因组太大，可能会出现<code>sample.translation</code>文件读取错误的问题，这个时候可以将基因组文件分成几个小文件（大概4GB左右，已测试），对每个小文件的重复序列进行从头预测，然后将结果进行合并。<a target="_blank" rel="noopener" href="https://github.com/Dfam-consortium/RepeatModeler/issues/248">Could not open *.translation file for reading! · Issue #248 · Dfam-consortium/RepeatModeler (github.com)</a></li>
+</ul>
+<p>结果文件：</p>
+<ol>
+<li>sample-families.fa （用于<code>RepeatMasker</code>指定lib）</li>
+<li>sample-families.stk（用于上传到Dfam数据库）</li>
+<li>sample-rmod.log（程序运行日志文件）</li>
+</ol>
+<p>使用<code>seqkit</code>对<code>.fa</code>文件中重复的id重命名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">seqkit rename sample.duplicate.name.fa &gt; sample.renamed.fa<br></code></pre></td></tr></table></figure>
+<h3 id="repeatmasker的使用"><a class="markdownIt-Anchor" href="#repeatmasker的使用"></a> <code>RepeatMasker</code>的使用</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">nohup</span> RepeatMasker sample.fa -pa 12 -lib sample-families.fa -poly -html -gff 2&gt;&amp;1 &gt; output.log &amp;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>-species</code>选择<code>RepeatMasker</code>数据库中已有的近缘物种</li>
+<li><code>-pa</code>线程数量，用RMBlast引擎会用到4核，即设置-pa 12会用到48线程。</li>
+<li><code>-lib</code>  指定<code>RepeatModeler</code>自我训练的库<code>sample-families.fa</code></li>
+<li><code>-poly</code> 在file.poly中保存多态的polymorphic的简单重复序列，即微卫星重复序列。</li>
+<li><code>-html</code>输出xhtml格式文件</li>
+<li><code>-gff</code>输出gff格式文件</li>
+<li><code>-dir</code> 指定输出文件的目录，默认时当下目录</li>
+</ul>
+<p><strong>⚠️⚠️⚠️注意：<code>RepeatMasker</code>的运行非常占用内存资源，如果内存不够，可以考虑将基因组按照scaffold或chromosome拆分文件，运行结束后再将结果进行合并。</strong></p>
+<p>结果：</p>
+<ul>
+<li>sample.fa.tbl：结果报告，统计了基因组长度，GC含量，重复序列长度及各类重复序列占比等。</li>
+<li>sample.fa.out：将基因组中预测得到的重复序列和参考序列相比的碱基替换频率、插入/删除率，以及重复序列的位置、结构、类型等信息展示出。</li>
+<li>sample.fa.out.gff：sample.fa.out的gff格式。</li>
+<li>sample.fa.out.html：sample.fa.out的网页形式。</li>
+<li>sample.fa.polyout：通过-poly参数，额外将sample.fa.out中的微卫星注释提取出来。微卫星注释是一种Simple_repeat序列，可以通过*.polyout将*.out的微卫星注释删除。有研究者认为微卫星不能算作严格的重复序列类型，还有研究者甚至认为Simple_repeat全都不能算。</li>
+<li><a target="_blank" rel="noopener" href="http://sample.fa.cat.ga">sample.fa.cat.ga</a>：记录了基因组序列和数据库中参考重复序列的比对详情，其中“i”和“v”分别代表了碱基转换（transitions）和颠换（transversions），“-”表示该位点存在碱基插入/删除。</li>
+<li>sample.fa.masked：将重复序列屏蔽成N碱基的masked基因组。</li>
+</ul>
+<p>sample.fa.out每一列含义：</p>
+<ul>
+<li>第一列：比对分值，SW score</li>
+<li>第二列：替代率 perc div.</li>
+<li>第三列：碱基缺失百分率</li>
+<li>第四列：在重复序列中碱基缺失百分率</li>
+<li>第五列：query sequence</li>
+<li>第六列：查询序列起始位置</li>
+<li>第七列：查询序列终止位置</li>
+<li>第八列：查询区域中超出比对区域碱基的数- 目，也就是没有比对上的碱基数</li>
+<li>第九列：+/-©</li>
+<li>第十列：比上的重复序列名称，类型命名</li>
+<li>第十一列：比上重复序列的分类，和- repeatmolder 中*.classed 是一样的</li>
+<li>第十二列：比上的在数据库中的起始位置</li>
+<li>第十三列：比上的在数据库中的终止位置</li>
+<li>第十四列：在第十列上超出比对区域碱基的数目，也就是没有比对上的碱基数</li>
+<li>第十五列：比对区域的ID，随机给的</li>
+</ul>
+<h2 id="编码基因注释"><a class="markdownIt-Anchor" href="#编码基因注释"></a> 编码基因注释</h2>
+<p>这里采用<a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER">BRAKER</a>对基因组编码基因进行注释</p>
+<p>BRAKER提供了4种运行模式：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER#braker-with-rna-seq-data">BRAKER with RNA-Seq data</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER#braker-with-protein-data">BRAKER with protein data</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER#braker-with-rna-seq-and-protein-data">BRAKER with RNA-Seq and protein data</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER#braker-with-short-and-long-read-rna-seq-and-protein-data">BRAKER with short and long read RNA-Seq and protein data</a></li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://github.com/Gaius-Augustus/BRAKER#keys-to-successful-gene-prediction">基因成功预测的关键</a>：</p>
+<ol>
+<li>使用高质量的基因组</li>
+<li>使用简单的scaffold (contig, chromosome) 名称</li>
+<li>屏蔽重复序列</li>
+<li>调整运行参数以适应不同的基因结构</li>
+<li>在使用注释之前评估注释结果</li>
+</ol>
+<p>建议docker安装 <a target="_blank" rel="noopener" href="https://hub.docker.com/r/teambraker/braker3">teambraker/braker3 - Docker Image | Docker Hub</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull teambraker/braker3<br></code></pre></td></tr></table></figure>
+<p>安装后运行容器shell</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">docker run --<span class="hljs-keyword">user</span> <span class="hljs-title">1000</span>:<span class="hljs-number">100</span> -v <span class="hljs-tag">&lt;host path&gt;</span>:<span class="hljs-tag">&lt;container path&gt;</span> --rm -it teambraker/braker3:latest bash<br></code></pre></td></tr></table></figure>
+<p>在容器shell中进行编码基因注释</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">nohup braker.pl --threads &lt;int&gt; <span class="hljs-attribute">--genome</span>=&lt;genome&gt; <span class="hljs-attribute">--species</span>=&lt;species name&gt; <span class="hljs-attribute">--prot_seq</span>=&lt;orthologous protein&gt; <span class="hljs-attribute">--bam</span>=&lt;RNA-Seq data&gt;  <span class="hljs-attribute">--workingdir</span>=&lt;work dir&gt; 2&gt;&amp;1 &gt; braker.log &amp;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>这里为第三种运行模式</li>
+<li><code>--bam</code> 参数后必须为<code>.bam</code> 文件，如有多个文件，需要用逗号隔开</li>
+</ul>
+<p>结果：</p>
+<ul>
+<li>braker.aa 从注释中提取的蛋白质序列</li>
+<li>braker.codingseq 从注释中提取的CDS序列</li>
+<li>braker.gtf BRAKER预测的基因组结构文件</li>
+<li>hintsfile.gff 来自RNA-Seq/蛋白数据的外部证据信息</li>
+</ul>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.plob.org/article/4700.html">基因组注释介绍 | Public Library of Bioinformatics (plob.org)</a></li>
+<li><a target="_blank" rel="noopener" href="https://liuyujie0136.gitbook.io/sci-tech-notes/bioinformatics/genome-denovo-ann">基因组注释基本流程 | Science and Technology Notes (gitbook.io)</a></li>
+<li><a target="_blank" rel="noopener" href="https://yanzhongsino.github.io/2021/08/02/omics_genome.annotation_repeat/#:~:text=%E7%BB%93%E5%90%88RepeatMasker%E5%92%8CEDTA%E7%9A%84%E7%BB%93%E6%9E%9C%E4%BD%9C%E4%B8%BA%E6%9C%80%E7%BB%88%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E9%87%8D%E5%A4%8D%E5%BA%8F%E5%88%97%E6%B3%A8%E9%87%8A%E3%80%82%201.%20%E9%87%8D%E5%A4%8D%E5%BA%8F%E5%88%97%E6%B3%A8%E9%87%8A%20%E9%87%8D%E5%A4%8D%E5%BA%8F%E5%88%97%E5%8D%A0%E5%9F%BA%E5%9B%A0%E7%BB%84%E9%9D%9E%E5%B8%B8%E9%AB%98%E7%9A%84%E6%AF%94%E4%BE%8B%EF%BC%8C%E5%AF%B9%E9%87%8D%E5%A4%8D%E5%BA%8F%E5%88%97%E7%9A%84%E6%B3%A8%E9%87%8A%E4%B8%80%E8%88%AC%E6%98%AF%E5%81%9A%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%B3%A8%E9%87%8A%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AD%A5%E3%80%82%E5%B8%B8%E7%94%A8%E7%9A%84%E5%9F%BA%E5%9B%A0%E7%BB%84%E9%87%8D%E5%A4%8D%E5%BA%8F%E5%88%97%E6%B3%A8%E9%87%8A%E8%BD%AF%E4%BB%B6%E6%9C%89RepeatMasker%2C,RepeatModeler%2C%20EDTA%E3%80%82%20%E8%BD%AC%E5%BA%A7%E5%AD%90%28transposable%20elements%2CTE%29%E6%98%AF%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%9F%BA%E5%9B%A0%E7%BB%84%E5%86%85%E6%94%B9%E5%8F%98%E4%BD%8D%E7%BD%AE%E7%9A%84%E4%B8%80%E6%AE%B5DNA%E5%BA%8F%E5%88%97%EF%BC%8C%E9%80%9A%E5%B8%B8%E7%94%B1DNA%E5%A4%8D%E5%88%B6%E9%80%A0%E6%88%90%EF%BC%8CTE%E6%98%AF%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E9%87%8D%E8%A6%81%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86%E3%80%82">基因组注释（一）：重复序列注释 | 生信技工 (yanzhongsino.github.io)</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90/" class="category-chain-item">转录组分析</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" class="print-no-link">#生物信息</a>
+      
+        <a href="/tags/%E7%94%9F%E4%BF%A1%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8/" class="print-no-link">#生信软件使用</a>
+      
+        <a href="/tags/%E7%BB%93%E6%9E%84%E6%B3%A8%E9%87%8A/" class="print-no-link">#结构注释</a>
+      
+        <a href="/tags/%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%B3%A8%E9%87%8A/" class="print-no-link">#基因组注释</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基因组结构注释</div>
+      <div>https://blog.stariverfeel.eu.org/posts/7393dc5b.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feel Liao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3f4340b4.html" title="转录组分析概述">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">转录组分析概述</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2f57a694.html" title="正则表达式">
+                        <span class="hidden-mobile">正则表达式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"FeelLiao/biotech-blog","repo-id":"R_kgDOMCN8VA","category":"Announcements","category-id":"DIC_kwDOMCN8VM4CgsO-","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN","loading":"lazy","crossorigin":"anonymous"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <span>框架 </span><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <span> | </span>  <span>主题 </span><a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span>  <span>加速 </span><a href="https://dash.cloudflare.com" target="_blank" rel="nofollow noopener"><span>Cloudflare</span></a> <span> | </span>  <span>部署 </span><a href="https://pages.github.com" target="_blank" rel="nofollow noopener"><span>Github Pages</span></a> <span> | </span>  <a href="https://icp.gov.moe/?keyword=20240218" target="_blank">萌ICP备20240218号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/custom/custom.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,865 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/webicon.png">
+  <link rel="icon" href="/assets/webicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feel Liao">
+  <meta name="keywords" content="生信, 计算机, 网络, 代码, 博客">
+  
+    <meta name="description" content="概述 转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有&#x2F;无参考基因组。  转录组上游分析 转录组上游分析一般有3种模式：  有参转录组上游分析 有参考基因组无注释文件上游分析或寻找新的转录本 无参考基因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="转录组分析概述">
+<meta property="og:url" content="https://blog.stariverfeel.eu.org/posts/3f4340b4.html">
+<meta property="og:site_name" content="Feel&#39;s Blog">
+<meta property="og:description" content="概述 转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有&#x2F;无参考基因组。  转录组上游分析 转录组上游分析一般有3种模式：  有参转录组上游分析 有参考基因组无注释文件上游分析或寻找新的转录本 无参考基因">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20231125161646.png">
+<meta property="og:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20240301203118.png">
+<meta property="article:published_time" content="2024-07-26T12:06:41.000Z">
+<meta property="article:modified_time" content="2025-02-07T06:37:23.187Z">
+<meta property="article:author" content="Feel Liao">
+<meta property="article:tag" content="生物信息">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.stariverfeel.eu.org/assets/Pastedimage20231125161646.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>转录组分析概述 - Feel&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/custom/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.stariverfeel.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"bash"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Feel&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>文章</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/archives/" target="_self">
+                    <i class="iconfont icon-archive-fill"></i>
+                    <span>归档</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/" target="_self">
+                    <i class="iconfont icon-tags-fill"></i>
+                    <span>标签</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/" target="_self">
+                    <i class="iconfont icon-category-fill"></i>
+                    <span>分类</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/messageboard/" target="_self">
+                <i class="iconfont icon-speakernotes"></i>
+                <span>留言板</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/myself/" target="_self">
+                <i class="iconfont icon-addrcard"></i>
+                <span>我自己</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-guanyu1"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/post_banner.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="转录组分析概述"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Feel Liao
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-26 20:06" pubdate>
+          2024年7月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">转录组分析概述</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年2月7日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h2>
+<p>转录组（transcriptome）广义上指某一生理条件下，细胞内所有转录产物的集合，包括信使RNA、核糖体RNA、转运RNA及非编码RNA；狭义上指所有mRNA的集合。转录组测序分析可以分为有参转录组分析和无参转录组分析。有参无参的意思是，有/无参考基因组。</p>
+<h2 id="转录组上游分析"><a class="markdownIt-Anchor" href="#转录组上游分析"></a> 转录组上游分析</h2>
+<p>转录组上游分析一般有3种模式：</p>
+<ul>
+<li>有参转录组上游分析</li>
+<li>有参考基因组无注释文件上游分析或寻找新的转录本</li>
+<li>无参考基因组</li>
+</ul>
+<p><img src="/assets/Pastedimage20231125161646.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1186/s13059-016-0881-8">10.1186/s13059-016-0881-8</a></p>
+<h3 id="测序数据及质量控制"><a class="markdownIt-Anchor" href="#测序数据及质量控制"></a> 测序数据及质量控制</h3>
+<p>测序数据主要由fastq格式提供，包含测序片段的序列信息和相应的测序质量打分，每条read由四行描述信息组成：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@ST-E00600:</span><span class="hljs-number">42</span>:<span class="hljs-attribute">H3JYTALXX</span>:<span class="hljs-number">1</span>:<span class="hljs-number">1101</span>:<span class="hljs-number">1217</span>:<span class="hljs-number">1000</span> <span class="hljs-number">1</span>:<span class="hljs-attribute">N</span>:<span class="hljs-number">0</span>:TCCGTCTA<br>GGCCAAAAAGGGGGAGTGGGTGGGTAGGGGAGTGCCAGGGCCAAAAAGGGGGAGTGGGTGGGTAGGGGAGTGGGGGTGGGTGGGTATGGGGGACTTTTGGTATAGCATTGAAAATGTAAATGAGCTAAATACCTAATAAAAAATGGAAAA<br>+<br><span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<span class="hljs-attribute">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>:<br></code></pre></td></tr></table></figure>
+<ol>
+<li>第一行以<code>@</code>开头，后面包含测序标识符和描述文字</li>
+<li>第二行为测序片段的序列信息</li>
+<li>第三行以<code>+</code>开头，后面为测序标识符</li>
+<li>第四行为测序片段的质量值。</li>
+</ol>
+<h3 id="测序数据过滤"><a class="markdownIt-Anchor" href="#测序数据过滤"></a> 测序数据过滤</h3>
+<p>使用过滤软件保留高质量的序列数据，去除接头序列，参考过滤标准：</p>
+<ol>
+<li>去除带接头（adapter）的 reads；</li>
+<li>当任一测序read中N含量超过该read碱基数的10%时，去除此paired reads；</li>
+<li>当任一测序read中含有的低质量（Q&lt;=20）碱基数超过该条read碱基数的50%时，去除此paired reads。</li>
+</ol>
+<h3 id="测序错误分布"><a class="markdownIt-Anchor" href="#测序错误分布"></a> 测序错误分布</h3>
+<p>当前RNA-seq测序技术，测序错误率分布存在以下两个特征：</p>
+<ol>
+<li>测序错误率随着测序序列(Sequenced Reads)长度的增加而升高。这是由测序过程中化学试剂的消耗导致的；</li>
+<li>前6个碱基具有较高的测序错误率，此长度恰好为RNA-seq建库过程中反转录所需的随机引物长度。前6个碱基测序错误率较高是因为随机引物和RNA模版的不完全结合</li>
+</ol>
+<h3 id="gc含量分布"><a class="markdownIt-Anchor" href="#gc含量分布"></a> GC含量分布</h3>
+<p>GC含量分布检查用于检测有无 AT、GC 分离现象。由于序列的随机打断和双链互补原则，理论上测序读段在每个位置的 GC 及 AT 含量应分别相等，且在整个测序过程基本稳定不变。但由于反转录使用的是 6 bp 随机引物，因此前几位碱基在核苷酸组成上会有一定偏好性，产生正常波动，随后则趋于稳定。</p>
+<h2 id="转录组下游分析"><a class="markdownIt-Anchor" href="#转录组下游分析"></a> 转录组下游分析</h2>
+<p>进行差异表达基因的筛选，也可将转录本比对到参考序列后进行基因结构方面的分析。</p>
+<p><strong>转录组生物信息分析流程如下图所示：</strong></p>
+<p><img src="/assets/Pastedimage20240301203118.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h3 id="新转录本预测"><a class="markdownIt-Anchor" href="#新转录本预测"></a> 新转录本预测</h3>
+<p>根据比对上基因组的 reads 的位置信息，使用<code>StringTie</code>将 reads 组装成转录本。 StringTie 应用网络流算法和可选的从头组装（denovo）来拼接转录本。拼接得到的转录本再使用 <code>GffCompare</code> 与基因组的注释信息比较，从中发现新转录本或新基因。</p>
+<h3 id="可变剪切鉴定"><a class="markdownIt-Anchor" href="#可变剪切鉴定"></a> 可变剪切鉴定</h3>
+<p>可变剪接(Alternative Splicing, AS)，是大多数真核生物细胞中普遍的一种基因表达方式。真核细胞的基因序列包含内含子(intron)与外显子(exon)，在基因转录成mRNA前体后内含子会被RNA剪接体移除，而外显子则保留于成熟mRNA中。一条未经剪接的RNA，可以具有多种外显子剪接形式，因此使得一个基因在不同时间、不同环境中可以翻译出不同的蛋白质，进而增加其生理状况下系统的复杂性或适应性。转录组数据的可变剪接分析使用<code>rMATS</code>实现</p>
+<h3 id="snpindel检测"><a class="markdownIt-Anchor" href="#snpindel检测"></a> SNP/InDel检测</h3>
+<p>单核苷酸多态性（Single Nucleotide Polymorphism，SNP）指基因组上由单个核苷酸变异形成的遗传标记。SNP 标记具有多态性丰富、分布广、遗传稳定性强等特点，而且可以实现高通量、自动化检测，具有低成本、高效的优点，因而成为研究生物表型与基因型之间关系的重要桥梁。插入/缺失（Insertion-Deletion，InDel）是指在近缘种或同一物种不同个体之间基因组同一位点的序列发生了不同大小核苷酸片段的插入或缺失，即一个序列上某一位点相比同源的另一个序列插入或缺失了一个或多个碱基。InDel 标记因其稳定性好、多态性高、分型系统简单，已广泛应用于动植物群体遗传分析、分子辅助育种等领域。一般而言，SNP 是指变异频率大于 1 % 的单核苷酸变异，InDel 的长度大部分在 50 bp 以内。</p>
+<p>由于部分 mRNA 会经历 RNA 编辑（RNA editing），即转录后的 RNA 在编码区发生碱基的插入、删除或替换，产生多态性的基因表达产物。从比对结果来看，SNP 和单碱基替换的 RNA 编辑结果相同。因此通过转录组测序数据检测到的 SNP 和 InDel 难免含有 RNA 编辑的产物。SNP 和 InDel的检测使用<code>GATK</code>实现，注释使用<code>ANNOVAR</code>实现</p>
+<h3 id="基因功能注释"><a class="markdownIt-Anchor" href="#基因功能注释"></a> 基因功能注释</h3>
+<p>从基因组中提取基因的序列，使用 diamond将新基因与 KEGG、GO、NR、Swiss-Prot、TrEMBL、KOG 数据库序列比对得到注释结果，比对条件为Evalue 1e-5。植物转录因子预测使用iTAK软件，iTAK 整合了两个数据库，PlnTFDB 和 PlantTFDB。动物转录因子鉴定使用动物转录因子数据库animalTFDB</p>
+<p><a target="_blank" rel="noopener" href="https://yanzhongsino.github.io/2021/05/17/omics_genome.annotation_function/">基因组注释（三）：基因功能注释 | 生信技工 (yanzhongsino.github.io)</a></p>
+<h3 id="基因表达定量"><a class="markdownIt-Anchor" href="#基因表达定量"></a> 基因表达定量</h3>
+<p>根据比对结果和基因在参考基因组上的位置信息，统计每个基因的reads数量。一个转录本的片段数目与测序数据（或Mapped Data）量、转录本长度、转录本表达水平都有关，为了让片段数目能真实地反映转录本表达水平，需要对样品中的Mapped Reads的数目和转录本长度进行归一化。</p>
+<h3 id="差异表达分析"><a class="markdownIt-Anchor" href="#差异表达分析"></a> 差异表达分析</h3>
+<p>GO功能显著性富集分析，KEGG信号通路富集分析，WCGNA，聚类分析，PCA</p>
+<p>**DESeq2、edgeR 和 limma ** 三大包可以说是做转录组差异分析的金标准，大多数转录组的文章都是用这三个 R 包进行差异分析的。</p>
+<p>首先，做差异分析需要的数据有：<strong>表达矩阵</strong>和<strong>分组信息</strong>。</p>
+<p><strong>DESeq2、edgeR 和 limma 包都建议使用 Counts，也就是原始计数数据作为输入进行分析，最好不要使用 FPKM、TPM 等归一化后的数据</strong></p>
+<p>官方参考教程：<strong><a target="_blank" rel="noopener" href="https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html">DESeq2</a></strong>、<strong><a target="_blank" rel="noopener" href="https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf">edgeR</a></strong>、<strong><a target="_blank" rel="noopener" href="https://www.bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">limma</a></strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/hbctraining/DGE_workshop_salmon_online">DEG-workshop</a></p>
+<h2 id="参考资料"><a class="markdownIt-Anchor" href="#参考资料"></a> 参考资料</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/687766131808">转录组分析流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/591064168">RNA-seq转录组数据分析丨一套完整的案例流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/653841949">差异分析三巨头 —— DESeq2、edgeR 和 limma 包</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90/" class="category-chain-item">转录组分析</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" class="print-no-link">#生物信息</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>转录组分析概述</div>
+      <div>https://blog.stariverfeel.eu.org/posts/3f4340b4.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feel Liao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/4cd61ccd.html" title="安卓内核驱动编译">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">安卓内核驱动编译</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/7393dc5b.html" title="基因组结构注释">
+                        <span class="hidden-mobile">基因组结构注释</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"FeelLiao/biotech-blog","repo-id":"R_kgDOMCN8VA","category":"Announcements","category-id":"DIC_kwDOMCN8VM4CgsO-","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN","loading":"lazy","crossorigin":"anonymous"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <span>框架 </span><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <span> | </span>  <span>主题 </span><a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span>  <span>加速 </span><a href="https://dash.cloudflare.com" target="_blank" rel="nofollow noopener"><span>Cloudflare</span></a> <span> | </span>  <span>部署 </span><a href="https://pages.github.com" target="_blank" rel="nofollow noopener"><span>Github Pages</span></a> <span> | </span>  <a href="https://icp.gov.moe/?keyword=20240218" target="_blank">萌ICP备20240218号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/custom/custom.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
